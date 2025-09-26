@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre mim (Victória Tauanny)</title>
+  <style>
+    :root {
+      --dark-blue: #0f172a;
+      --mid-blue: #1e293b;
+      --light-blue: #38bdf8;
+      --background-start: #0f172a;
+      --background-end: #0c4a6e;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(270deg, var(--background-start), var(--mid-blue), var(--background-end), var(--mid-blue), var(--background-start));
+      background-size: 600% 600%;
+      animation: gradientShift 60s ease infinite;
+      color: #f8fafc;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container {
+      max-width: 90vw;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.5s ease;
+    }
+    
+    .initial-screen, .final-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .initial-screen h1 {
+      font-size: 8vw;
+      color: var(--light-blue);
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .time {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 4vw;
+      font-weight: bold;
+      color: var(--light-blue);
+      z-index: 10;
+      display: none;
+    }
+
+    .text {
+      font-size: 5vw;
+      max-width: 90vw;
+      line-height: 1.4;
+      min-height: 20vh;
+      margin-top: 20px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      position: relative;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .effect {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0.8;
+      animation: floatEffect 2s ease-out forwards;
+      font-size: 2rem;
+      z-index: 5;
+    }
+
+    @keyframes floatEffect {
+      0% { transform: translateY(0); opacity: 0.8; }
+      100% { transform: translateY(-50px); opacity: 0; }
+    }
+
+    .final-screen {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s ease;
+      z-index: 20;
+    }
+    .final-screen.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .final-screen h2 {
+      font-size: 6vw;
+      color: #fde047; 
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px var(--light-blue), 0 0 20px var(--light-blue);
+    }
+    
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #f00;
+        opacity: 0;
+        animation: confetti-fall 3s ease-in-out forwards;
+    }
+
+    @keyframes confetti-fall {
+        0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+
+
+    button {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      border: 2px solid var(--light-blue); 
+      border-radius: 30px; 
+      background-color: rgba(56, 189, 248, 0.2); 
+      color: #f8fafc; 
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s, background-color 0.3s, color 0.3s;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      z-index: 15;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: var(--light-blue);
+      color: var(--dark-blue); 
+    }
+
+    @media (min-width: 768px) {
+      .initial-screen h1 { font-size: 3rem; }
+      .text { font-size: 2rem; }
+      .time { font-size: 1.5rem; }
+      .effect { font-size: 1.5rem; }
+      .final-screen h2 { font-size: 2.5rem; }
+      button { font-size: 1.5rem; padding: 15px 40px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="time" id="timer">0s</div>
+  
+  <div class="initial-screen" id="initialScreen">
+      <h1>Sobre mim (Victória Tauanny)</h1>
+      <button id="startBtn">Iniciar</button>
+  </div>
+
+  <div class="container" id="presentationContainer">
+    <div class="text" id="message"></div>
+  </div>
+
+  <div class="final-screen" id="finalScreen">
+    <h2>Pronta para criar o futuro na Apple Developer Academy!</h2>
+    <button id="restartBtn">Reiniciar</button>
+  </div>
+
+  <script>
+    const coreMessages = [
+        "Olá, meu nome é Victória Tauanny, tenho 19 anos e estou cursando Engenharia da Computação no Cin.",
+        "Minha curiosidade em entender como as coisas funcionam foi o ponto de partida da minha jornada. Com o tempo, ela se transformou em uma verdadeira paixão por tecnologia. Cada projeto que desenvolvi, desde experimentos simples até protótipos mais complexos, me mostrou que criar vai muito além de escrever código: é transformar ideias em soluções reais.",
+        "Além de tecnologia, sou fascinada por livros de fantasia e ficção científica, e também tenho grande interesse por astronomia; adoro observar o céu e estudar sobre o universo.",
+        "Sou curiosa, determinada e gosto de desafios que me fazem crescer.",
+        "Sendo assim, participar da Apple Academy seria uma oportunidade incrível para aprofundar meus conhecimentos e colaborar com pessoas igualmente motivadas.",
+        "Estou pronta para contribuir, aprender e transformar ideias em experiências significativas."
+    ];
+
+    const fullMessage = coreMessages.join(' '); 
+
+    const effects = {
+      "livros": "📚",
+      "astronomia": "✨",
+      "tecnologia": "💡",
+      "inovação": "🚀",
+      "código": "💻",
+      "criar": "✨"
+    };
+
+    const typingSpeed = 55;
+    const maxTime = 60; 
+
+    let time = 0;
+    let interval;
+    let charIndex = 0;
+    let typingInterval;
+    let started = false;
+
+    const timerEl = document.getElementById("timer");
+    const messageEl = document.getElementById("message");
+    const startBtn = document.getElementById("startBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const initialScreen = document.getElementById("initialScreen");
+    const finalScreen = document.getElementById("finalScreen");
+    const presentationContainer = document.getElementById("presentationContainer");
+
+    function createEffect(symbol) {
+      const effectDiv = document.createElement('div');
+      effectDiv.className = 'effect';
+      effectDiv.textContent = symbol;
+      const rect = messageEl.getBoundingClientRect();
+      effectDiv.style.left = (rect.left + Math.random() * rect.width) + 'px';
+      effectDiv.style.top = (rect.top + rect.height * 0.5) + 'px';
+      document.body.appendChild(effectDiv);
+      setTimeout(() => effectDiv.remove(), 2000);
+    }
+    
+    function createConfetti() {
+        const colors = ['#fde047', '#f8fafc', '#38bdf8', '#ef4444', '#10b981'];
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 1.5 + 's';
+            confetti.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+
+    function endPresentation() {
+        clearInterval(interval);
+        clearInterval(typingInterval);
+        
+        timerEl.style.display = 'none';
+        presentationContainer.style.opacity = '0';
+        
+        finalScreen.classList.add('active');
+        createConfetti();
+    }
+
+    function typeContinuously() {
+      if (charIndex < fullMessage.length) {
+        const char = fullMessage.charAt(charIndex);
+        messageEl.textContent += char;
+        
+        for (let key in effects) {
+            const wordStart = fullMessage.toLowerCase().lastIndexOf(key, charIndex - 1);
+            if (wordStart !== -1 && (char === ' ' || char === '.' || char === ',') && Math.random() < 0.2) { 
+                createEffect(effects[key]);
+            }
+        }
+
+        charIndex++;
+      } else {
+        endPresentation();
+      }
+    }
+
+    function startTimer() {
+        interval = setInterval(() => {
+            time++;
+            timerEl.textContent = time + "s";
+            if (time >= maxTime) {
+                endPresentation();
+            }
+        }, 1000);
+    }
+
+    function startPresentation() {
+      if (started) return;
+      started = true;
+      
+      initialScreen.style.display = 'none';
+      timerEl.style.display = 'block';
+      messageEl.style.opacity = '1';
+
+      startTimer();
+      typingInterval = setInterval(typeContinuously, typingSpeed);
+    }
+    
+    function restartPresentation() {
+        window.location.reload(); 
+    }
+
+    startBtn.addEventListener("click", startPresentation);
+    restartBtn.addEventListener("click", restartPresentation);
+  </script>
+</body>
+</html>
